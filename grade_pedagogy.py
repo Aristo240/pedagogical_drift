@@ -58,7 +58,10 @@ PROVIDER_CONFIG = {
 class GraderConfig:
     provider: str = "anthropic"
     model: str = ""
-    max_tokens: int = 600
+    # 1000 tokens room: 4 markers x (score + ~20-word justification) + JSON
+    # overhead. 600 was occasionally too tight and caused mid-string
+    # truncation on Gemini.
+    max_tokens: int = 1000
     temperature: float = 0.0
 
     def __post_init__(self):
