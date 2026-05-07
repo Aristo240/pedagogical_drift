@@ -10,7 +10,19 @@
 
 3. **Drift is domain-selective**, not uniform. History shows the strongest decline (β = −0.147/turn, p = 0.039). Language learning shows no decline (β = +0.047, n.s.). Mirrors Solmira & Shiller's finding that drift is selective in alignment-style studies.
 
-These three findings are visible in `results/full/trajectory.png` and `results/full/domain_trajectories.png`. Full numbers in `results/full/summary.json`.
+### Trajectory: pedagogy declines across tutor turns
+
+![pedagogy trajectory](results/full/trajectory.png)
+
+Aggregate pedagogy score (1–5 Likert) by tutor turn index, with linear fit. Engaged and offloading conditions overlap — same drift slope (~−0.06/turn) regardless of student behavior.
+
+### Domain selectivity
+
+![per-domain drift](results/full/domain_trajectories.png)
+
+Per-domain drift is non-uniform. History (top-left in the grid) shows the steepest decline; language learning is stable. STEM domains tend negative but most don't reach significance individually.
+
+Full numbers in `results/full/summary.json`.
 
 ## The question
 
