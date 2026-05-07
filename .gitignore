@@ -1,0 +1,15 @@
+.env
+.env.example
+.env.local
+*.env
+.venv/
+venv/
+__pycache__/
+*.pyc
+.DS_Store
+# Big generated raw data is gitignored; small summary outputs (plots,
+# agreement.json, grades.csv) are committed so the repo shows results.
+data/conversations/*.jsonl
+!data/conversations/pilot_sample.jsonl  # keep one small sample committed
+# phase 2 model weights
+models/

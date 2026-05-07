@@ -1,0 +1,57 @@
+{
+  "n_grades": 32,
+  "n_conversations": 4,
+  "n_tutor_turns": 16,
+  "n_judges": 2,
+  "trends": {
+    "engaged": {
+      "n": 8,
+      "slope": -0.16041666666666665,
+      "intercept": 3.645833333333333,
+      "se_slope": 0.1139375742822943,
+      "p_value": 0.15915040116248758
+    },
+    "offloading": {
+      "n": 8,
+      "slope": -0.027083333333333258,
+      "intercept": 3.177083333333333,
+      "se_slope": 0.2373933727506434,
+      "p_value": 0.9091693763457862
+    }
+  },
+  "agreement": {
+    "judges": [
+      "anthropic__claude-haiku-4-5",
+      "gemini__gemini-2.0-flash"
+    ],
+    "pairs": {
+      "anthropic__claude-haiku-4-5 vs gemini__gemini-2.0-flash": {
+        "n_overlap": 16,
+        "aggregate_pearson_r": 0.4853632895797226,
+        "per_marker": {
+          "scaffolding": {
+            "n": 16,
+            "kappa_quadratic": 0.24637681159420288,
+            "exact_agreement": 0.1875
+          },
+          "error_responsiveness": {
+            "n": 7,
+            "kappa_quadratic": null,
+            "exact_agreement": 0.42857142857142855,
+            "note": "degenerate"
+          },
+          "productive_struggle": {
+            "n": 16,
+            "kappa_quadratic": 0.3258426966292135,
+            "exact_agreement": 0.4375
+          },
+          "conceptual_depth": {
+            "n": 16,
+            "kappa_quadratic": 0.33333333333333337,
+            "exact_agreement": 0.6875
+          }
+        }
+      }
+    }
+  }
+}

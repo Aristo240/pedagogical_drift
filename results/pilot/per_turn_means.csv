@@ -1,0 +1,17 @@
+turn,persona,judge,mean,std,count
+1,engaged,anthropic__claude-haiku-4-5,3.75,1.0606601717798212,2
+1,engaged,gemini__gemini-2.0-flash,3.25,0.0,2
+1,offloading,anthropic__claude-haiku-4-5,3.875,0.8838834764831844,2
+1,offloading,gemini__gemini-2.0-flash,3.25,0.0,2
+2,engaged,anthropic__claude-haiku-4-5,3.458333333333333,1.1195857368787,2
+2,engaged,gemini__gemini-2.0-flash,3.25,0.0,2
+2,offloading,anthropic__claude-haiku-4-5,2.5,0.23570226039551562,2
+2,offloading,gemini__gemini-2.0-flash,3.125,0.1767766952966369,2
+3,engaged,anthropic__claude-haiku-4-5,3.0,0.9428090415820631,2
+3,engaged,gemini__gemini-2.0-flash,3.125,0.1767766952966369,2
+3,offloading,anthropic__claude-haiku-4-5,2.3333333333333335,0.0,2
+3,offloading,gemini__gemini-2.0-flash,2.625,0.8838834764831844,2
+4,engaged,anthropic__claude-haiku-4-5,2.875,0.1767766952966369,2
+4,engaged,gemini__gemini-2.0-flash,3.25,0.0,2
+4,offloading,anthropic__claude-haiku-4-5,3.666666666666667,1.4142135623730956,2
+4,offloading,gemini__gemini-2.0-flash,3.5,0.7071067811865476,2
