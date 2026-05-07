@@ -66,6 +66,115 @@ def load_grades(path: Path) -> pd.DataFrame:
     return pd.DataFrame(rows)
 
 
+def interaction_regression(df: pd.DataFrame) -> dict:
+    """Fit: aggregate ~ 1 + turn + persona + turn:persona.
+    Tests H2 (persona moderates drift) directly via the interaction coefficient.
+
+    Encodes persona as 0 = engaged, 1 = offloading. Returns coefficient
+    estimates, standard errors, and 2-sided p-values from a normal approximation.
+    """
+    sub = df.dropna(subset=["aggregate", "turn", "persona"]).copy()
+    if len(sub) < 6 or sub["persona"].nunique() < 2:
+        return {"n": int(len(sub)), "note": "insufficient data for interaction test"}
+    sub["persona_bin"] = (sub["persona"] == "offloading").astype(float)
+    n = len(sub)
+    X = np.column_stack([
+        np.ones(n),
+        sub["turn"].astype(float).values,
+        sub["persona_bin"].values,
+        sub["turn"].astype(float).values * sub["persona_bin"].values,
+    ])
+    y = sub["aggregate"].astype(float).values
+    # OLS
+    beta, *_ = np.linalg.lstsq(X, y, rcond=None)
+    yhat = X @ beta
+    resid = y - yhat
+    dof = n - X.shape[1]
+    if dof < 1:
+        return {"n": int(n), "note": "too few residual dof"}
+    sigma2 = (resid ** 2).sum() / dof
+    cov = sigma2 * np.linalg.inv(X.T @ X)
+    se = np.sqrt(np.diag(cov))
+    from math import erf, sqrt
+    names = ["intercept", "turn", "persona_offloading", "turn_x_persona_offloading"]
+    out = {"n": int(n), "dof": int(dof), "coefficients": {}}
+    for i, name in enumerate(names):
+        if se[i] == 0 or np.isnan(se[i]):
+            p = None
+        else:
+            t = beta[i] / se[i]
+            p = 2 * (1 - 0.5 * (1 + erf(abs(t) / sqrt(2))))
+        out["coefficients"][name] = {
+            "estimate": float(beta[i]),
+            "se": float(se[i]),
+            "p_value": float(p) if p is not None else None,
+        }
+    out["interpretation"] = (
+        "turn coefficient = drift slope in engaged condition. "
+        "turn_x_persona_offloading coefficient = additional slope offset for "
+        "offloading vs engaged (H2). p-value is for that interaction term."
+    )
+    return out
+
+
+def domain_trends(df: pd.DataFrame, min_n: int = 6) -> dict:
+    """Per-domain linear trend of aggregate ~ turn (collapsed across personas
+    and judges). Reports slope, p-value, n, and the per-condition slope where
+    available. Useful for: 'does pedagogy drift more in some domains than others?'
+    """
+    sub = df.dropna(subset=["aggregate", "turn", "domain"]).copy()
+    out: dict[str, dict] = {}
+    for dom, g in sub.groupby("domain"):
+        n = len(g)
+        if n < min_n:
+            out[dom] = {"n": int(n), "note": f"fewer than {min_n} grades"}
+            continue
+        x = g["turn"].astype(float).values
+        y = g["aggregate"].astype(float).values
+        out[dom] = linear_trend(x, y)
+        # also report per-persona slope where possible
+        per_persona = {}
+        for persona, gp in g.groupby("persona"):
+            if len(gp) >= 4 and gp["turn"].nunique() > 1:
+                per_persona[persona] = linear_trend(
+                    gp["turn"].astype(float).values,
+                    gp["aggregate"].astype(float).values,
+                )
+        if per_persona:
+            out[dom]["per_persona"] = per_persona
+    return out
+
+
+def plot_domain_trajectory(df: pd.DataFrame, out_path: Path) -> None:
+    """One panel per domain, showing aggregate vs turn (judges averaged)."""
+    avg = df.groupby(["conversation_id", "turn", "persona", "domain"])["aggregate"].mean().reset_index()
+    domains = sorted(avg["domain"].dropna().unique())
+    if not domains:
+        return
+    n = len(domains)
+    cols = 3
+    rows = (n + cols - 1) // cols
+    fig, axes = plt.subplots(rows, cols, figsize=(cols * 3.2, rows * 2.4),
+                             sharex=True, sharey=True)
+    palette = {"engaged": "#2ca02c", "offloading": "#d62728"}
+    axes_flat = axes.flat if hasattr(axes, "flat") else [axes]
+    for ax, dom in zip(axes_flat, domains):
+        d = avg[avg["domain"] == dom]
+        for persona, sub in d.groupby("persona"):
+            per_turn = sub.groupby("turn")["aggregate"].mean().reset_index()
+            ax.plot(per_turn["turn"], per_turn["aggregate"], marker="o",
+                    color=palette.get(persona, "#1f77b4"), label=persona, alpha=0.8)
+        ax.set_title(f"{dom}  (n={len(d)})", fontsize=9)
+        ax.set_ylim(1, 5)
+    # Hide unused axes
+    for ax in list(axes_flat)[len(domains):]:
+        ax.axis("off")
+    fig.supxlabel("tutor turn")
+    fig.supylabel("aggregate pedagogy score")
+    fig.tight_layout()
+    fig.savefig(out_path, dpi=150)
+
+
 def linear_trend(x: np.ndarray, y: np.ndarray) -> dict:
     """OLS slope of y on x, with t-test on slope. Returns slope, p, n."""
     if len(x) < 3 or np.std(x) == 0:
@@ -242,12 +351,46 @@ def main() -> None:
     df_avg_markers = df.groupby(["conversation_id", "turn", "persona"])[MARKERS].mean().reset_index()
     plot_markers(df_avg_markers, outdir / "markers_by_turn.png")
 
+    # H2 test: persona × turn interaction (judge-averaged so each turn-conversation
+    # contributes one observation)
+    print("\n=== H2 test: persona × turn interaction ===")
+    interaction = interaction_regression(avg_judges.copy())
+    if "coefficients" in interaction:
+        for name, coef in interaction["coefficients"].items():
+            est = coef["estimate"]
+            p = coef["p_value"]
+            print(f"  {name:35s} estimate={est:+.3f}  p={p}")
+        print(f"  (n={interaction['n']}, dof={interaction['dof']})")
+    else:
+        print(f"  {interaction.get('note', 'no result')}")
+
+    # Per-domain breakdown
+    print("\n=== Per-domain drift slopes ===")
+    dom_trends = domain_trends(df.assign(domain=df["domain"]))
+    for dom, info in dom_trends.items():
+        slope = info.get("slope")
+        p = info.get("p_value")
+        n = info.get("n")
+        if slope is None:
+            print(f"  {dom:20s} n={n}  (skipped: {info.get('note','')})")
+        else:
+            print(f"  {dom:20s} slope={slope:+.3f}  p={p}  n={n}")
+
+    plot_domain_trajectory(
+        df.groupby(["conversation_id", "turn", "persona", "domain"])["aggregate"]
+          .mean().reset_index(),
+        outdir / "domain_trajectories.png"
+    )
+    print(f"Saved: {outdir/'domain_trajectories.png'}")
+
     summary = {
         "n_grades": int(len(df)),
         "n_conversations": int(df["conversation_id"].nunique()),
         "n_tutor_turns": int(df.groupby(["conversation_id", "turn"]).ngroups),
         "n_judges": int(df["judge"].nunique()),
         "trends": trends,
+        "interaction_h2_test": interaction,
+        "domain_trends": dom_trends,
         "agreement": agreement,
     }
     (outdir / "summary.json").write_text(json.dumps(summary, indent=2))
