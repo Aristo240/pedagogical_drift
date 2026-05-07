@@ -1,0 +1,5 @@
+# Raw rollout files contain per-rollout activations (4608-dim float32 each).
+# 24 MB + 4 MB. Not strictly needed once axis_npz + judged file are saved.
+# Reproducible from run_axis_pipeline.py given the model + roles + questions.
+rollouts_roles.jsonl
+rollouts_default.jsonl
