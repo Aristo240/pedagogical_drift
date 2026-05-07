@@ -1,6 +1,16 @@
 # Pedagogical Drift in Extended LLM Tutoring
 
-> **Status: ongoing pilot.** Phase 1 (LLM-as-judge pedagogy grading) is in progress. Phase 2 (activation-axis drift on open-weights model) is scaffolded but not yet run.
+> **Status: Phase 1 pilot complete; Phase 2 (activation-axis) scaffolded.**
+
+## Headline findings (Phase 1, n=37 conversations × 4 tutor turns × 3 judges = 444 grades)
+
+1. **Pedagogical quality declines significantly across tutor turns.** Slope β = **−0.063 per turn, p = 0.024** (engaged condition). Effect size: ~0.5 Likert points lost over 8 turns on a 1–5 scale.
+
+2. **Student persona does not moderate the drift.** Interaction β = −0.003, p = 0.95. The slope is indistinguishable between engaged and offloading students — drift is not user-driven, it is intrinsic to multi-turn dynamics.
+
+3. **Drift is domain-selective**, not uniform. History shows the strongest decline (β = −0.147/turn, p = 0.039). Language learning shows no decline (β = +0.047, n.s.). Mirrors Solmira & Shiller's finding that drift is selective in alignment-style studies.
+
+These three findings are visible in `results/full/trajectory.png` and `results/full/domain_trajectories.png`. Full numbers in `results/full/summary.json`.
 
 ## The question
 
