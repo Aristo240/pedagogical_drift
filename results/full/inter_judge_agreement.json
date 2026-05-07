@@ -1,0 +1,94 @@
+{
+  "judges": [
+    "anthropic__claude-haiku-4-5",
+    "gemini__gemini-2.0-flash",
+    "openai__gpt-4o-mini"
+  ],
+  "pairs": {
+    "anthropic__claude-haiku-4-5 vs gemini__gemini-2.0-flash": {
+      "n_overlap": 136,
+      "aggregate_pearson_r": 0.42901472214182734,
+      "per_marker": {
+        "scaffolding": {
+          "n": 136,
+          "kappa_quadratic": 0.022754491017964007,
+          "exact_agreement": 0.20588235294117646
+        },
+        "error_responsiveness": {
+          "n": 44,
+          "kappa_quadratic": null,
+          "exact_agreement": 0.6590909090909091,
+          "note": "degenerate"
+        },
+        "productive_struggle": {
+          "n": 136,
+          "kappa_quadratic": 0.22874286550563439,
+          "exact_agreement": 0.2647058823529412
+        },
+        "conceptual_depth": {
+          "n": 136,
+          "kappa_quadratic": 0.033333333333333326,
+          "exact_agreement": 0.5735294117647058
+        }
+      }
+    },
+    "anthropic__claude-haiku-4-5 vs openai__gpt-4o-mini": {
+      "n_overlap": 148,
+      "aggregate_pearson_r": 0.17808504936997419,
+      "per_marker": {
+        "scaffolding": {
+          "n": 148,
+          "kappa_quadratic": 0.056548135299219426,
+          "exact_agreement": 0.1891891891891892
+        },
+        "error_responsiveness": {
+          "n": 48,
+          "kappa_quadratic": null,
+          "exact_agreement": 0.6458333333333334,
+          "note": "degenerate"
+        },
+        "productive_struggle": {
+          "n": 148,
+          "kappa_quadratic": null,
+          "exact_agreement": 0.22297297297297297,
+          "note": "degenerate"
+        },
+        "conceptual_depth": {
+          "n": 148,
+          "kappa_quadratic": null,
+          "exact_agreement": 0.5608108108108109,
+          "note": "degenerate"
+        }
+      }
+    },
+    "gemini__gemini-2.0-flash vs openai__gpt-4o-mini": {
+      "n_overlap": 136,
+      "aggregate_pearson_r": 0.022030014441365004,
+      "per_marker": {
+        "scaffolding": {
+          "n": 136,
+          "kappa_quadratic": 0.00366300366300365,
+          "exact_agreement": 0.9705882352941176
+        },
+        "error_responsiveness": {
+          "n": 108,
+          "kappa_quadratic": null,
+          "exact_agreement": 0.9907407407407407,
+          "note": "degenerate"
+        },
+        "productive_struggle": {
+          "n": 136,
+          "kappa_quadratic": null,
+          "exact_agreement": 0.9705882352941176,
+          "note": "degenerate"
+        },
+        "conceptual_depth": {
+          "n": 136,
+          "kappa_quadratic": null,
+          "exact_agreement": 0.9926470588235294,
+          "note": "degenerate"
+        }
+      }
+    }
+  }
+}
