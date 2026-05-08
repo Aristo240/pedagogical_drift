@@ -55,23 +55,28 @@ def main() -> None:
     else:
         proj_default_individual = data["proj_default"]
 
+    plt.rcParams.update({"font.size": 12})
+
     # === Plot 1: histogram, default vs role-playing on the same axis ===
-    fig, ax = plt.subplots(figsize=(9, 4.5))
-    ax.hist(proj_individual, bins=40, alpha=0.7, color="#C44E52", label=f"role-playing (n={len(proj_individual)})", edgecolor="black")
-    ax.hist(proj_default_individual, bins=40, alpha=0.7, color="#4C72B0", label=f"default Assistant (n={len(proj_default_individual)})", edgecolor="black")
-    ax.axvline(proj_individual.mean(), linestyle="--", color="#C44E52", linewidth=1.5)
-    ax.axvline(proj_default_individual.mean(), linestyle="--", color="#4C72B0", linewidth=1.5)
-    ax.set_xlabel("projection onto Assistant Axis (raw activation units, Gemma-2-27b-it layer 22)")
-    ax.set_ylabel("rollouts")
-    ax.set_title(f"Validation: default-Assistant rollouts project higher than role-playing rollouts\n"
-                 f"means: default={proj_default_individual.mean():.0f}, role={proj_individual.mean():.0f}, "
-                 f"separation={proj_default_individual.mean()-proj_individual.mean():.0f}")
-    ax.legend(loc="upper left")
+    fig, ax = plt.subplots(figsize=(11, 5.5))
+    ax.hist(proj_individual, bins=40, alpha=0.7, color="#C44E52",
+            label=f"role-playing (n={len(proj_individual)})", edgecolor="black")
+    ax.hist(proj_default_individual, bins=40, alpha=0.7, color="#4C72B0",
+            label=f"default Assistant (n={len(proj_default_individual)})", edgecolor="black")
+    ax.axvline(proj_individual.mean(), linestyle="--", color="#C44E52", linewidth=2)
+    ax.axvline(proj_default_individual.mean(), linestyle="--", color="#4C72B0", linewidth=2)
+    ax.set_xlabel("projection onto Assistant Axis (raw activation units)\nGemma-2-27b-it, layer 22 of 46", fontsize=12)
+    ax.set_ylabel("rollouts", fontsize=12)
+    ax.set_title("Default-Assistant rollouts project higher than role-playing rollouts\n"
+                 f"means: default = {proj_default_individual.mean():.0f},  role = {proj_individual.mean():.0f},  "
+                 f"separation = {proj_default_individual.mean()-proj_individual.mean():.0f}",
+                 fontsize=13)
+    ax.legend(loc="upper left", fontsize=11)
     fig.tight_layout()
-    fig.savefig(OUT / "axis_validation_histogram.png", dpi=150)
+    fig.savefig(OUT / "axis_validation_histogram.png", dpi=150, bbox_inches="tight")
     print(f"Saved: {OUT / 'axis_validation_histogram.png'}")
 
-    # === Plot 2: per-role mean projection (which roles are most/least Assistant-like) ===
+    # === Plot 2: per-role mean projection ===
     role_proj_means = []
     role_labels_sorted = []
     for ri in role_ids:
@@ -83,20 +88,21 @@ def main() -> None:
     sorted_roles = [role_labels_sorted[i] for i in sort_idx]
     sorted_means = [role_proj_means[i] for i in sort_idx]
 
-    fig, ax = plt.subplots(figsize=(9, 7))
+    fig, ax = plt.subplots(figsize=(11, 9))
     y = np.arange(len(sorted_roles))
-    bars = ax.barh(y, sorted_means, color="#55A868", edgecolor="black")
-    ax.axvline(proj_default_individual.mean(), linestyle="--", color="#4C72B0", linewidth=2,
-               label=f"default Assistant mean ({proj_default_individual.mean():.0f})")
+    bars = ax.barh(y, sorted_means, color="#55A868", edgecolor="black", height=0.75)
+    ax.axvline(proj_default_individual.mean(), linestyle="--", color="#4C72B0", linewidth=2.5,
+               label=f"default Assistant mean = {proj_default_individual.mean():.0f}")
     ax.set_yticks(y)
-    ax.set_yticklabels(sorted_roles, fontsize=8)
-    ax.set_xlabel("mean projection onto Assistant Axis")
-    ax.set_title("Per-role projection on the Assistant Axis (Gemma-2-27b-it layer 22)\n"
-                 "Lower (left) = more role-playing-like; Higher (right) = closer to default Assistant\n"
-                 "Lu et al. predict: 'helpful-human' roles project higher than 'mystical/non-human' roles")
-    ax.legend(loc="lower right")
+    ax.set_yticklabels(sorted_roles, fontsize=12)
+    ax.set_xlabel("mean projection onto Assistant Axis (raw activation units)", fontsize=12)
+    ax.set_title("Per-role projection on the Assistant Axis\n"
+                 "left = more role-playing-like;  right = closer to default Assistant\n"
+                 "Lu et al. prediction: 'helpful-human' roles closer to default; mystical/non-human further",
+                 fontsize=12)
+    ax.legend(loc="lower right", fontsize=12)
     fig.tight_layout()
-    fig.savefig(OUT / "axis_per_role_projection.png", dpi=150)
+    fig.savefig(OUT / "axis_per_role_projection.png", dpi=150, bbox_inches="tight")
     print(f"Saved: {OUT / 'axis_per_role_projection.png'}")
 
 
