@@ -1,0 +1,26 @@
+test_family,test,estimate,se,p_value,n,significant_at_0.05,interpretation
+Phase 1 - H1 (drift slope by persona),aggregate ~ turn  |  persona=engaged,-0.0630,0.0243,0.0095,72,yes,drift in pedagogy quality across tutor turns
+Phase 1 - H1 (drift slope by persona),aggregate ~ turn  |  persona=offloading,-0.0656,0.0302,0.0298,76,yes,drift in pedagogy quality across tutor turns
+Phase 1 - H2 (persona x turn interaction),aggregate ~ turn * persona  |  coef = intercept,+3.2276,0.0765,0.0000,148,yes,tests whether persona moderates drift slope (H2)
+Phase 1 - H2 (persona x turn interaction),aggregate ~ turn * persona  |  coef = turn,-0.0630,0.0279,0.0243,148,yes,tests whether persona moderates drift slope (H2)
+Phase 1 - H2 (persona x turn interaction),aggregate ~ turn * persona  |  coef = persona_offloading,-0.0723,0.1068,0.4985,148,no,tests whether persona moderates drift slope (H2)
+Phase 1 - H2 (persona x turn interaction),aggregate ~ turn * persona  |  coef = turn_x_persona_offloading,-0.0027,0.0390,0.9452,148,no,tests whether persona moderates drift slope (H2)
+Phase 1 - per-domain drift slope,aggregate ~ turn  |  domain=biology,-0.0353,0.0521,0.4976,47,no,drift slope within a single domain
+Phase 1 - per-domain drift slope,aggregate ~ turn  |  domain=computer science,-0.1063,0.0562,0.0588,70,no,drift slope within a single domain
+Phase 1 - per-domain drift slope,aggregate ~ turn  |  domain=economics,-0.0222,0.0912,0.8075,12,no,drift slope within a single domain
+Phase 1 - per-domain drift slope,aggregate ~ turn  |  domain=history,-0.1474,0.0715,0.0391,45,yes,drift slope within a single domain
+Phase 1 - per-domain drift slope,aggregate ~ turn  |  domain=language,+0.0472,0.0751,0.5294,48,no,drift slope within a single domain
+Phase 1 - per-domain drift slope,aggregate ~ turn  |  domain=math,-0.0458,0.0552,0.4063,59,no,drift slope within a single domain
+Phase 1 - per-domain drift slope,aggregate ~ turn  |  domain=philosophy,-0.0543,0.0590,0.3573,45,no,drift slope within a single domain
+Phase 1 - per-domain drift slope,aggregate ~ turn  |  domain=physics,-0.0653,0.0501,0.1924,72,no,drift slope within a single domain
+Phase 1 - per-domain drift slope,aggregate ~ turn  |  domain=statistics,-0.1062,0.0681,0.1187,34,no,drift slope within a single domain
+Phase 1 - inter-judge agreement (aggregate Pearson r),anthropic claude-haiku-4-5 vs gemini gemini-2.0-flash,+0.4290,n/a,n/a (descriptive),136,n/a,"convergent validity across judges; one judge in pair = generator (Gemini), so within-family pair is biased toward agreement"
+Phase 1 - inter-judge agreement (Cohen's quadratic kappa per marker),anthropic claude-haiku-4-5 vs gemini gemini-2.0-flash  |  marker=scaffolding,+0.0228,n/a,n/a (descriptive),136,n/a,quadratic-weighted Cohen's kappa per pedagogy marker
+Phase 1 - inter-judge agreement (Cohen's quadratic kappa per marker),anthropic claude-haiku-4-5 vs gemini gemini-2.0-flash  |  marker=productive_struggle,+0.2287,n/a,n/a (descriptive),136,n/a,quadratic-weighted Cohen's kappa per pedagogy marker
+Phase 1 - inter-judge agreement (Cohen's quadratic kappa per marker),anthropic claude-haiku-4-5 vs gemini gemini-2.0-flash  |  marker=conceptual_depth,+0.0333,n/a,n/a (descriptive),136,n/a,quadratic-weighted Cohen's kappa per pedagogy marker
+Phase 1 - inter-judge agreement (aggregate Pearson r),anthropic claude-haiku-4-5 vs openai gpt-4o-mini,+0.1781,n/a,n/a (descriptive),148,n/a,"convergent validity across judges; one judge in pair = generator (Gemini), so within-family pair is biased toward agreement"
+Phase 1 - inter-judge agreement (Cohen's quadratic kappa per marker),anthropic claude-haiku-4-5 vs openai gpt-4o-mini  |  marker=scaffolding,+0.0565,n/a,n/a (descriptive),148,n/a,quadratic-weighted Cohen's kappa per pedagogy marker
+Phase 1 - inter-judge agreement (aggregate Pearson r),gemini gemini-2.0-flash vs openai gpt-4o-mini,+0.0220,n/a,n/a (descriptive),136,n/a,"convergent validity across judges; one judge in pair = generator (Gemini), so within-family pair is biased toward agreement"
+Phase 1 - inter-judge agreement (Cohen's quadratic kappa per marker),gemini gemini-2.0-flash vs openai gpt-4o-mini  |  marker=scaffolding,+0.0037,n/a,n/a (descriptive),136,n/a,quadratic-weighted Cohen's kappa per pedagogy marker
+Phase 2 - Lu et al. assistant axis validation,Welch t-test: default-Assistant projection > role-playing projection,+1939.48 (raw activation units),53.56,0.00e+00,"default=100, role=574",yes,axis successfully separates default from role-playing rollouts (Lu et al. validation)
+Phase 2 - Lu et al. assistant axis validation,axis separation magnitude (means),+1896.49,n/a,n/a (descriptive),"30 roles, 100 default rollouts",n/a,"raw activation-space separation; default mean=10128, role mean=8189"

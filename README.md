@@ -18,11 +18,33 @@ Aggregate pedagogy score (1–5 Likert) by tutor turn index, with linear fit. En
 
 ### Domain selectivity
 
-![per-domain drift](results/full/domain_trajectories.png)
+![per-domain slope bar chart](results/full/domain_slopes_bar.png)
 
-Per-domain drift is non-uniform. History (top-left in the grid) shows the steepest decline; language learning is stable. STEM domains tend negative but most don't reach significance individually.
+Per-domain drift is non-uniform. History shows the steepest, statistically significant decline (β = −0.147/turn, p = 0.039). Language learning is the only domain with a positive slope (n.s.). STEM domains tend negative but most don't reach significance individually at this n.
 
-Full numbers in `results/full/summary.json`.
+Full numbers in `results/full/summary.json`. **All significance tests in one CSV: [`results/full/significance_tests.csv`](results/full/significance_tests.csv).**
+
+## Phase 2 — Lu et al. Assistant Axis (just added)
+
+Following [Lu et al. 2026](https://arxiv.org/abs/2601.10387) faithfully (contrast-vector method, not base-vs-instruct contrast), the assistant axis was derived on **Gemma-2-27b-it** (BF16 on Lambda H100, layer 22 of 46) using:
+- 600 role-playing rollouts (30 archetypes × 20 extraction questions)
+- 100 default-Assistant rollouts (5 system-prompt conditions × 20 questions)
+- Mean residual stream activation **across response tokens** at the chosen layer
+- Claude Haiku as LLM judge to filter for fully-role-playing responses (96% pass rate; 574/600 strict, all 30 roles have ≥1 strict pass)
+
+### Axis validation
+
+![axis validation histogram](phase2/lu_axis/results/axis_validation_histogram.png)
+
+Default-Assistant projections (blue) cleanly separate from role-playing projections (red). **Welch t-test: separation = +1939 raw activation units, p ≈ 0** (extremely strong; ~574 vs 100 rollouts).
+
+### Per-role projection — Lu et al.'s prediction holds
+
+![per-role projection](phase2/lu_axis/results/axis_per_role_projection.png)
+
+Roles project onto the axis in a Lu-et-al.-predicted ordering. "Helpful human" archetypes (engineer, professor, scientist, lawyer) project closest to the default Assistant; mystical/non-human entities (eldritch, dragon, oracle, ghost) project furthest from it. Trickster, child, and pirate roles fall in between.
+
+The axis vector and judged rollouts are saved at `phase2/lu_axis/results/assistant_axis.npz` and `phase2/lu_axis/results/rollouts_roles_judged.jsonl` for reuse — anyone can apply this axis to their own conversations.
 
 ## The question
 
